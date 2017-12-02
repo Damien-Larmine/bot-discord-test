@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Damien-Larmine/bot-discord-test/issues"
   },
-  "homepage": "https://github.com/Damien-Larmine/bot-discord-test#readme"
+  "homepage": "https://github.com/Damien-Larmine/bot-discord-test#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
 }
