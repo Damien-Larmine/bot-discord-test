@@ -1,0 +1,19 @@
+{
+  "name": "bot-discord-test",
+  "version": "0.0.1",
+  "description": "test bot pour discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Damien-Larmine/bot-discord-test.git"
+  },
+  "author": "DL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Damien-Larmine/bot-discord-test/issues"
+  },
+  "homepage": "https://github.com/Damien-Larmine/bot-discord-test#readme"
+}
