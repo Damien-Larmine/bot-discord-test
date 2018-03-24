@@ -9,6 +9,7 @@ log4js.configure({
 });
 
 var logger = log4js.getLogger('log');
+var connec;
 
 bot.on('ready', function () {
   console.log('Je suis connecté !')
@@ -19,6 +20,10 @@ bot.login('Mzg2NTAyNDc0NjIzNzQ2MDQ4.DQQ2Ig.nl6uMlrzuvuuxJm5ohKIZcSeryA')
 bot.on('message', message => {
   if(message.content === 'ping') {
     message.reply('pong')
+  }
+
+  if(message.content.startsWith('!stop')){
+    connec.disconnect()
   }
 
   if(message.content.startsWith('!play')) {
@@ -47,6 +52,7 @@ bot.on('message', message => {
         voiceChannel
           .join()
           .then(function (connection){
+            connec = connection;
             //On démarre un stream à partir de la video youtube
             let stream = YoutubeStream(args[1])
             stream.on('error', function () {
