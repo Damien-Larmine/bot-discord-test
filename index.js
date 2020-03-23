@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
-const YoutubeStream = require('youtube-audio-stream')
+const config = require('./config.json')
+
 const bot = new Discord.Client()
 var log4js = require('log4js');
 
@@ -15,57 +16,59 @@ bot.on('ready', function () {
   console.log('Je suis connecté !')
 })
 
-bot.login('Mzg2NTAyNDc0NjIzNzQ2MDQ4.DQQ2Ig.nl6uMlrzuvuuxJm5ohKIZcSeryA')
+bot.login(config.token)
 
 bot.on('message', message => {
   if(message.content === 'ping') {
     message.reply('pong')
   }
 
-  if(message.content.startsWith('!stop')){
-    connec.disconnect()
+  if(message.content.startsWith('!roll')) {
+    let args = message.content.split(' ')
+    rollDice(args[1], message);
   }
 
-  if(message.content.startsWith('!play')) {
-
-        // On récupère le premier channel audio du serveur
-        let voiceChannel = message.guild.channels
-          .filter(function (channel) {
-            return channel.type === 'voice' && channel.members
-              .find(function (member) {
-                return member.id === message.author.id
-              })
-            }).first()
-
-        if(!voiceChannel) {
-          voiceChannel =  message.guild.channels
-            .filter(function (channel) {
-              return channel.type === 'voice'
-            }).first()
-        }
-
-        //On récupère les arguments de la commande
-        //Il faudrait utiliser une regexp pour valider le lien youtube
-        let args = message.content.split(' ')
-
-        //On rejoint le channel audio
-        voiceChannel
-          .join()
-          .then(function (connection){
-            connec = connection;
-            //On démarre un stream à partir de la video youtube
-            let stream = YoutubeStream(args[1])
-            stream.on('error', function () {
-              message.reply('Je n\'ai pas réussi à lire cette vidéo :(')
-              connection.disconnect()
-            })
-            //On envoie le stream au channel audio
-            //Il faudrait ici éviter les superpositions (envoi de plusieurs vidéo en même temps)
-            connection
-              .playStream(stream)
-              .on('end', function() {
-                connection.disconnect()
-              })
-          })
-  }
 })
+
+function rollDice(diceToRoll, messageToReply) {
+  const roll = diceToRoll.split('d');
+  const nbDice = parseInt(roll[0], 10);
+  let dice, diceWithBonus, bonus;
+  let response = '';
+  let sum = 0;
+
+  if(roll[1].indexOf('+') > -1) {
+    diceWithBonus = roll[1].split('+');
+    dice = diceWithBonus[0];
+    bonus = diceWithBonus[1];
+  } else {
+    dice = parseInt(roll[1], 10);
+  }
+
+  for(let i = 1; i <= nbDice; i += 1) {
+    let diceRoll = getRandomInt(dice);
+    if( i === 1) {
+      response = 'Le 1er lancer a fait ' + diceRoll;
+    } else {
+      response += '\nLe ' + i + 'ème lancer a fait ' + diceRoll
+    }
+    sum += diceRoll;
+  }
+
+  if (nbDice === 1) {
+    response += '\nLancer : ' + sum
+  } else {
+    response += '\nTotal des lancers : ' + sum
+  }
+
+  if(bonus) {
+    const total = parseInt(sum,10) + parseInt(bonus,10);
+    response += '\nLe total vaut ' + total
+  }
+
+  messageToReply.reply(response)
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max)) + 1;
+}
