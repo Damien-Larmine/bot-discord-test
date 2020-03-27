@@ -23,7 +23,7 @@ bot.on('message', message => {
     message.reply('pong')
   }
 
-  if(message.content.startsWith('!roll')) {
+  if(message.content.startsWith('!r')) {
     let args = message.content.split(' ')
     rollDice(args[1], message);
   }
